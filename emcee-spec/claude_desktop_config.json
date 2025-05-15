@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "picsum": {
+      "command": "emcee",
+      "args": [
+        "https://github.com/BartKim-J/mcp-spec/releases/latest/download/picsum.yaml"
+      ]
+    },
+    "reSmush": {
+      "command": "emcee",
+      "args": [
+        "https://github.com/BartKim-J/mcp-spec/releases/latest/download/reSmush.yaml"
+      ]
+    },
+    "dummyImage": {
+      "command": "emcee",
+      "args": [
+        "https://github.com/BartKim-J/mcp-spec/releases/latest/download/dummyimage.yaml"
+      ]
+    },
+    "weather": {
+      "command": "emcee",
+      "args": [
+        "https://api.weather.gov/openapi.json"
+      ]
+    }
+  }
+}
