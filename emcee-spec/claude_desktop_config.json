@@ -3,19 +3,19 @@
     "picsum": {
       "command": "emcee",
       "args": [
-        "https://github.com/BartKim-J/mcp-spec/releases/latest/download/picsum.yaml"
+        "https://github.com/vcat-dev/pion-bot-public/releases/download/latest/picsum.yaml"
       ]
     },
     "reSmush": {
       "command": "emcee",
       "args": [
-        "https://github.com/BartKim-J/mcp-spec/releases/latest/download/reSmush.yaml"
+        "https://github.com/vcat-dev/pion-bot-public/releases/download/latest/reSmush.yaml"
       ]
     },
     "dummyImage": {
       "command": "emcee",
       "args": [
-        "https://github.com/BartKim-J/mcp-spec/releases/latest/download/dummyimage.yaml"
+        "https://github.com/vcat-dev/pion-bot-public/releases/download/latest/dummyimage.yaml"
       ]
     },
     "weather": {

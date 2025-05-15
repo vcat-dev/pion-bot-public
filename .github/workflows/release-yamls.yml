@@ -53,7 +53,7 @@ jobs:
         with:
           tag_name: latest
           files: |
-            **/*.yaml
-            **/*.json
+            emcee-spec/*.yaml
+            emcee-spec/*.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
