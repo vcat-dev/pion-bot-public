@@ -1,0 +1,188 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CODEF Admin API",
+    "description": "API for retrieving CODEF error code information",
+    "version": "1.0.0",
+    "license": {
+      "name": "Unknown",
+      "url": "https://codef.io"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://admin.codef.io"
+    }
+  ],
+  "paths": {
+    "/dev-guide-menu/errCode-list/{beginIndex}/{endIndex}": {
+      "get": {
+        "operationId": "getErrorCodeList",
+        "summary": "Retrieve error code information",
+        "description": "Retrieve a list of CODEF error codes with details. The list is paginated based on the beginIndex and endIndex parameters. If beginIndex is 0 and endIndex is 3, it returns 3 items. CODEF error code starts with CF- and ends with 5 digits e.g. CF-00000. If a user asks about an error code like CF-03999 or CF-03002, use this tool to look it up. There are 572 error codes in total as of 2025-05-17 so you can use beginIndex of 0 and endIndex of 572 to get the whole list.",
+        "parameters": [
+          {
+            "name": "beginIndex",
+            "in": "path",
+            "required": true,
+            "description": "Starting index of the error code list (inclusive, 0-based)",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "endIndex",
+            "in": "path",
+            "required": true,
+            "description": "Ending index of the error code list (exclusive, 0-based)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "description": "Search term to filter error codes (can be an error code like 'CF-03999' or a descriptive term like '조회')",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {}
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with error code information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorCodeListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorCodeListResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string",
+            "example": "SUCCESS"
+          },
+          "resultJson": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "ErrorCodeInfoVoList": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ErrorCodeInfo"
+                }
+              }
+            }
+          },
+          "errCode": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error code if the request failed"
+          },
+          "errMsg": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error message if the request failed"
+          },
+          "page": {
+            "type": "object",
+            "nullable": true,
+            "description": "Pagination information"
+          }
+        }
+      },
+      "ErrorCodeInfo": {
+        "type": "object",
+        "properties": {
+          "errCategory": {
+            "type": "string",
+            "description": "Error category code",
+            "example": "8"
+          },
+          "errCategoryName": {
+            "type": "string",
+            "description": "Error category name",
+            "example": "정상"
+          },
+          "errCode": {
+            "type": "string",
+            "description": "Error code",
+            "example": "CF-00000"
+          },
+          "errType": {
+            "type": "string",
+            "description": "Error type",
+            "example": "0"
+          },
+          "codefMsg": {
+            "type": "string",
+            "description": "Error message in CODEF",
+            "example": "성공"
+          },
+          "espiderMsg": {
+            "type": "string",
+            "description": "Error message in espider",
+            "example": "성공"
+          },
+          "remark": {
+            "type": "string",
+            "description": "Additional remark about the error",
+            "nullable": true,
+            "example": " "
+          },
+          "defaultChargeYN": {
+            "type": "string",
+            "description": "Whether this error is charged by default",
+            "example": "Y"
+          },
+          "totalCnt": {
+            "type": "string",
+            "description": "Total count of error codes",
+            "example": "572"
+          },
+          "errCodeDetail": {
+            "type": "array",
+            "description": "Detailed information about the error",
+            "items": {
+              "$ref": "#/components/schemas/ErrorCodeDetail"
+            }
+          }
+        }
+      },
+      "ErrorCodeDetail": {
+        "type": "object",
+        "properties": {
+          "errUser": {
+            "type": "string",
+            "nullable": true,
+            "description": "User information related to the error"
+          },
+          "errContent": {
+            "type": "string",
+            "description": "Detailed content of the error",
+            "example": "extraMessage에 누락된 파라미터 키워드를 확인 후 재요청"
+          }
+        }
+      }
+    }
+  }
+}
