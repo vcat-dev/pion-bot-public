@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "CODEF Admin API",
     "description": "API for retrieving CODEF error code information",
