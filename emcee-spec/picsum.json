@@ -42,7 +42,7 @@
             "name": "blur",
             "in": "query",
             "required": false,
-            "description": "블러 필터 적용 정도. 1 이상의 숫자를 입력하면 블러가 적용됩니다.\n예시: `blur=2`\n",
+            "description": "블러 필터 적용 정도. 1 이상의 숫자를 입력하면 블러가 적용됩니다.\n예시: `blur=2`\n만약 없다면 넘기지 않습니다.\n",
             "schema": {
               "type": "integer",
               "minimum": 1
@@ -52,7 +52,7 @@
             "name": "grayscale",
             "in": "query",
             "required": false,
-            "description": "흑백 이미지 여부입니다. 해당 키를 포함하면 true로 간주됩니다.\n예시: `?grayscale`\n",
+            "description": "흑백 이미지 여부입니다. 해당 키를 포함하면 true로 간주됩니다.\n예시: `?grayscale`\n존재 여부로 판단하기 때문에 절대 흑백이 아닐 경우 이 키를 포함하지 않습니다.\n",
             "schema": {
               "type": "boolean",
               "nullable": true,
