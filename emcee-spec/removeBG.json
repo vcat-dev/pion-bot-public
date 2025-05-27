@@ -82,7 +82,9 @@
                       "type": "object",
                       "properties": {
                         "result_b64": {
-                          "type": "string"
+                          "type": "string",
+                          "format": "byte",
+                            "description": "배경이 제거된 이미지의 Base64 인코딩"
                         },
                         "foreground_top": {
                           "type": "integer"

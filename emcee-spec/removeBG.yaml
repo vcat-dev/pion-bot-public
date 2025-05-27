@@ -26,6 +26,8 @@ paths:
                   type: string
                 image_file_b64:
                   type: string
+                  format: byte
+                  description: 배경이 제거된 이미지의 Base64 인코딩
                 size:
                   type: string
                   enum: [preview, full, auto]
