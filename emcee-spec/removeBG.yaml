@@ -8,7 +8,7 @@ info:
     주로 이커머스 제품 사진 처리, SNS 썸네일 제작, 인물 이미지 배경 제거 등에 활용됩니다."
 
 servers:
-  - url: "https://api.example.com"
+  - url: "https://www.remove.bg"
 
 paths:
   /remove-bg/upload:
