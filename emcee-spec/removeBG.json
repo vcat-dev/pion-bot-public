@@ -1,123 +1,69 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "이미지 배경 제거 API",
+    "title": "Image Background Remove API",
     "version": "1.0.0",
-    "description": "\"이 API는 이미지에서 배경을 자동으로 제거하는 AI 기반 이미지 처리 서비스입니다. 사용자는 이미지 파일을 직접 업로드하거나 이미지 URL을 제공하여 배경 제거 결과를 얻을 수 있습니다. 주로 이커머스 제품 사진 처리, SNS 썸네일 제작, 인물 이미지 배경 제거 등에 활용됩니다.\"\n"
+    "description": "이 API는 업로드된 이미지 또는 URL로 제공된 이미지에서 배경을 자동 제거합니다. 인물, 제품, 자동차 등 주요 전경 객체를 감지하여 배경을 투명하게 처리하고, 결과 이미지를 PNG 또는 JPG 등으로 반환합니다. 주로 이커머스 상품 이미지, SNS 콘텐츠 제작, 증명사진 배경 제거 등에 활용됩니다."
   },
   "servers": [
     {
-      "url": "https://www.remove.bg"
+      "url": "https://api.remove.bg/v1.0"
     }
   ],
   "paths": {
-    "/remove-bg/upload": {
+    "/removebg": {
       "post": {
-        "summary": "업로드한 이미지에서 배경 제거",
-        "description": "\"사용자가 로컬에 저장된 이미지를 직접 업로드하면, 서버는 해당 이미지를 분석하여 배경을 제거한 후 PNG 포맷으로 반환합니다. 고해상도 제품 사진, 인물 사진 등의 배경 제거에 유용하며, 사용자 입력이 정확한 경우 가장 빠르고 안정적인 결과를 제공합니다.\"\n",
-        "operationId": "removeBackgroundFromUpload",
+        "summary": "이미지 배경 제거 실행",
+        "description": "이미지를 업로드하거나 URL로 제공하면, AI가 자동으로 전경 객체(인물, 제품 등)를 인식하여 배경을 제거합니다. 결과 이미지는 요청한 포맷과 해상도로 반환됩니다.\n\n📌 MCP Agent 프롬프트 예시: 사용자의 입력이 이미지 URL, base64, 또는 바이너리 파일 중 하나일 경우 해당 소스를 선택하여 배경을 제거하고, 제거된 이미지를 반환합니다.",
+        "operationId": "removeBackground",
         "requestBody": {
           "required": true,
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "image_file": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "사용자가 업로드할 이미지 파일 (JPG, PNG 형식). 전경 객체가 명확히 보이는 이미지가 좋습니다."
-                  },
-                  "size": {
-                    "type": "string",
-                    "enum": [
-                      "auto",
-                      "preview",
-                      "full"
-                    ],
-                    "default": "auto",
-                    "description": "\"출력 이미지 크기 설정입니다. 'auto'는 서버가 적절히 판단하여 결정하며, 'preview'는 빠른 미리보기 용도로, 'full'은 고해상도 이미지를 의미합니다.\"\n"
-                  }
-                }
+                "$ref": "#/components/schemas/RemoveBgMultipart"
               }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "배경이 제거된 PNG 이미지가 바이너리 형태로 반환됩니다.",
-            "content": {
-              "image/png": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "업로드된 파일이 없거나 형식이 잘못된 경우 발생합니다."
-          },
-          "401": {
-            "description": "API 키가 누락되었거나 유효하지 않을 경우 발생합니다."
-          }
-        },
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ]
-      }
-    },
-    "/remove-bg/url": {
-      "post": {
-        "summary": "이미지 URL로 배경 제거",
-        "description": "\"사용자가 이미지 URL을 제공하면 서버는 해당 이미지를 다운로드하여 분석한 후 배경을 제거합니다. 외부에서 크롤링된 이미지나 CDN에 저장된 파일을 바로 처리하고자 할 때 유용합니다. 단, 비공개 링크이거나 접근이 차단된 경우 오류가 발생할 수 있습니다.\"\n",
-        "operationId": "removeBackgroundFromUrl",
-        "requestBody": {
-          "required": true,
-          "content": {
+            },
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "image_url": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "처리할 이미지의 외부 URL (http 또는 https). 접근 가능한 공개 링크여야 합니다."
-                  },
-                  "size": {
-                    "type": "string",
-                    "enum": [
-                      "auto",
-                      "preview",
-                      "full"
-                    ],
-                    "default": "auto",
-                    "description": "출력 이미지 크기 설정 방식 (auto, preview, full)"
-                  }
-                }
+                "$ref": "#/components/schemas/RemoveBgJson"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveBgJson"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "배경이 제거된 이미지가 PNG 포맷으로 반환됩니다.",
+            "description": "배경이 제거된 이미지가 반환됩니다.",
             "content": {
-              "image/png": {
+              "image/*": {
                 "schema": {
                   "type": "string",
                   "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveBgJsonResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "유효하지 않은 URL이거나 이미지 다운로드 또는 처리 중 오류 발생"
+            "description": "잘못된 요청 또는 이미지 처리 실패"
           },
           "401": {
-            "description": "API 키 인증 실패"
+            "description": "인증 실패 (API 키 누락 또는 유효하지 않음)"
+          },
+          "402": {
+            "description": "사용 가능 크레딧 부족"
+          },
+          "429": {
+            "description": "요청 횟수 제한 초과"
           }
         },
         "security": [
@@ -133,7 +79,84 @@
       "ApiKeyAuth": {
         "type": "apiKey",
         "in": "header",
-        "name": "X-Api-Key"
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "RemoveBgMultipart": {
+        "type": "object",
+        "properties": {
+          "image_file": {
+            "type": "string",
+            "format": "binary",
+            "description": "업로드할 이미지 파일 (JPG/PNG/WebP)"
+          },
+          "size": {
+            "type": "string",
+            "enum": ["preview", "full", "auto"],
+            "default": "auto",
+            "description": "'preview': 저해상도 미리보기, 'full': 최대 25MP, 'auto': 최적값 자동 선택"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["auto", "person", "product", "car"],
+            "default": "auto",
+            "description": "전경 객체 타입 지정 (자동 감지 권장)"
+          },
+          "format": {
+            "type": "string",
+            "enum": ["auto", "png", "jpg"],
+            "default": "auto",
+            "description": "출력 이미지 포맷"
+          }
+        }
+      },
+      "RemoveBgJson": {
+        "type": "object",
+        "properties": {
+          "image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "이미지의 외부 URL"
+          },
+          "image_file_b64": {
+            "type": "string",
+            "description": "Base64 인코딩된 이미지 데이터"
+          },
+          "size": {
+            "type": "string",
+            "enum": ["preview", "full", "auto"],
+            "default": "auto"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["auto", "person", "product", "car"],
+            "default": "auto"
+          },
+          "format": {
+            "type": "string",
+            "enum": ["auto", "png", "jpg"],
+            "default": "auto"
+          }
+        }
+      },
+      "RemoveBgJsonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "result_b64": {
+                "type": "string",
+                "description": "Base64 인코딩된 결과 이미지"
+              },
+              "foreground_top": { "type": "integer" },
+              "foreground_left": { "type": "integer" },
+              "foreground_width": { "type": "integer" },
+              "foreground_height": { "type": "integer" }
+            }
+          }
+        }
       }
     }
   }
