@@ -3,7 +3,7 @@
   "info": {
     "title": "Image Background Remove API",
     "version": "1.0.0",
-    "description": "이 API는 업로드된 이미지 또는 URL로 제공된 이미지에서 배경을 자동 제거합니다. 인물, 제품, 자동차 등 주요 전경 객체를 감지하여 배경을 투명하게 처리하고, 결과 이미지를 PNG 또는 JPG 등으로 반환합니다. 주로 이커머스 상품 이미지, SNS 콘텐츠 제작, 증명사진 배경 제거 등에 활용됩니다."
+    "description": "Base64 또는 URL로 이미지를 입력받아 배경을 제거합니다. MCP로 호환됩니다."
   },
   "servers": [
     {
@@ -12,134 +12,78 @@
   ],
   "paths": {
     "/removebg": {
-      "post": {
+      "get": {
         "summary": "이미지 배경 제거 실행",
-        "description": "이미지를 업로드하거나 URL로 제공하면, AI가 자동으로 전경 객체(인물, 제품 등)를 인식하여 배경을 제거합니다. 결과 이미지는 요청한 포맷과 해상도로 반환됩니다.\n\n📌 MCP Agent 프롬프트 예시: 사용자의 입력이 이미지 URL, base64, 또는 바이너리 파일 중 하나일 경우 해당 소스를 선택하여 배경을 제거하고, 제거된 이미지를 반환합니다.",
+        "description": "image_url 또는 image_file_b64 중 하나를 입력하면 배경이 제거된 이미지를 반환합니다.",
         "operationId": "removeBackground",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/RemoveBgMultipart"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RemoveBgJson"
-              }
-            },
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/RemoveBgJson"
-              }
+        "parameters": [
+          {
+            "name": "image_url",
+            "in": "query",
+            "description": "외부 이미지 URL (선택)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          {
+            "name": "image_file_b64",
+            "in": "query",
+            "description": "Base64 인코딩된 이미지 데이터 (선택)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "해상도 설정",
+            "schema": {
+              "type": "string",
+              "enum": ["preview", "full", "auto"],
+              "default": "auto"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "전경 객체 타입",
+            "schema": {
+              "type": "string",
+              "enum": ["auto", "person", "product", "car"],
+              "default": "auto"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "출력 이미지 포맷",
+            "schema": {
+              "type": "string",
+              "enum": ["auto", "png", "jpg"],
+              "default": "auto"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "배경이 제거된 이미지가 반환됩니다.",
+            "description": "성공 시 결과 이미지 (base64 인코딩된 JSON)",
             "content": {
-              "image/*": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RemoveBgJsonResponse"
                 }
               }
             }
-          },
-          "400": {
-            "description": "잘못된 요청 또는 이미지 처리 실패"
-          },
-          "401": {
-            "description": "인증 실패 (API 키 누락 또는 유효하지 않음)"
-          },
-          "402": {
-            "description": "사용 가능 크레딧 부족"
-          },
-          "429": {
-            "description": "요청 횟수 제한 초과"
           }
-        },
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ]
+        }
       }
     }
   },
   "components": {
-    "securitySchemes": {
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-API-Key"
-      }
-    },
     "schemas": {
-      "RemoveBgMultipart": {
-        "type": "object",
-        "properties": {
-          "image_file": {
-            "type": "string",
-            "format": "binary",
-            "description": "업로드할 이미지 파일 (JPG/PNG/WebP)"
-          },
-          "size": {
-            "type": "string",
-            "enum": ["preview", "full", "auto"],
-            "default": "auto",
-            "description": "'preview': 저해상도 미리보기, 'full': 최대 25MP, 'auto': 최적값 자동 선택"
-          },
-          "type": {
-            "type": "string",
-            "enum": ["auto", "person", "product", "car"],
-            "default": "auto",
-            "description": "전경 객체 타입 지정 (자동 감지 권장)"
-          },
-          "format": {
-            "type": "string",
-            "enum": ["auto", "png", "jpg"],
-            "default": "auto",
-            "description": "출력 이미지 포맷"
-          }
-        }
-      },
-      "RemoveBgJson": {
-        "type": "object",
-        "properties": {
-          "image_url": {
-            "type": "string",
-            "format": "uri",
-            "description": "이미지의 외부 URL"
-          },
-          "image_file_b64": {
-            "type": "string",
-            "description": "Base64 인코딩된 이미지 데이터"
-          },
-          "size": {
-            "type": "string",
-            "enum": ["preview", "full", "auto"],
-            "default": "auto"
-          },
-          "type": {
-            "type": "string",
-            "enum": ["auto", "person", "product", "car"],
-            "default": "auto"
-          },
-          "format": {
-            "type": "string",
-            "enum": ["auto", "png", "jpg"],
-            "default": "auto"
-          }
-        }
-      },
       "RemoveBgJsonResponse": {
         "type": "object",
         "properties": {
