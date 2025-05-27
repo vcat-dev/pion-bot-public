@@ -8,24 +8,24 @@ info:
 servers:
   - url: https://admin.codef.io
 paths:
-  /dev-guide-menu/errCode-list/{beginIndex}/{endIndex}:
+  /dev-guide-menu/errCode-list/{begin}/{end}:
     get:
       operationId: getErrorCodeList
       summary: Retrieve error code information
       description:
-        Retrieve a list of CODEF error codes with details. The list is paginated based on the beginIndex and endIndex parameters.
-        If beginIndex is 0 and endIndex is 3, it returns 3 items. CODEF error code starts with CF- and ends with 5 digits e.g. CF-00000.
+        Retrieve a list of CODEF error codes with details. The list is paginated based on the begin and end parameters.
+        If begin is 0 and end is 3, it returns 3 items. CODEF error code starts with CF- and ends with 5 digits e.g. CF-00000.
         If a user asks about an error code like CF-03999 or CF-03002, use this tool to look it up.
-        There are 572 error codes in total as of 2025-05-17 so you can use beginIndex of 0 and endIndex of 572 to get the whole list.
+        There are 572 error codes in total as of 2025-05-17 so you can use begin of 0 and end of 572 to get the whole list.
       parameters:
-        - name: beginIndex
+        - name: begin
           in: path
           required: true
           description: Starting index of the error code list (inclusive, 0-based)
           schema:
             type: integer
             minimum: 0
-        - name: endIndex
+        - name: end
           in: path
           required: true
           description: Ending index of the error code list (exclusive, 0-based)
