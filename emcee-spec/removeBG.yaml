@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: "이미지 배경 제거 API"
+  title: "Image Background Remove API"
   version: "1.0.0"
   description: >
     "이 API는 이미지에서 배경을 자동으로 제거하는 AI 기반 이미지 처리 서비스입니다.
