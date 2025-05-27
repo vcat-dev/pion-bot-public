@@ -5,39 +5,39 @@ info:
   description: Base64 또는 URL로 이미지를 입력받아 배경을 제거합니다. MCP로 호환됩니다.
 servers:
   - url: https://api.remove.bg/v1.0
+security:
+  - ApiKeyAuth: []
 paths:
   /removebg:
-    get:
+    post:
       summary: 이미지 배경 제거 실행
       description: image_url 또는 image_file_b64 중 하나를 입력하면 배경이 제거된 이미지를 반환합니다.
       operationId: removeBackground
-      parameters:
-        - name: image_url
-          in: query
-          required: false
-          schema:
-            type: string
-            format: uri
-        - name: image_file_b64
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: size
-          in: query
-          schema:
-            type: string
-            enum: [preview, full, auto]
-        - name: type
-          in: query
-          schema:
-            type: string
-            enum: [auto, person, product, car]
-        - name: format
-          in: query
-          schema:
-            type: string
-            enum: [auto, png, jpg]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - image_url
+              properties:
+                image_url:
+                  type: string
+                image_file_b64:
+                  type: string
+                size:
+                  type: string
+                  enum: [preview, full, auto]
+                  default: auto
+                type:
+                  type: string
+                  enum: [auto, person, product, car]
+                  default: auto
+                format:
+                  type: string
+                  enum: [auto, png, jpg]
+                  default: auto
       responses:
         '200':
           description: 성공 시 결과 이미지 (base64 인코딩된 JSON)
@@ -59,3 +59,9 @@ paths:
                         type: integer
                       foreground_height:
                         type: integer
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
