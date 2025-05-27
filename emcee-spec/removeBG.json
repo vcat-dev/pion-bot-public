@@ -20,7 +20,6 @@
           {
             "name": "image_url",
             "in": "query",
-            "description": "외부 이미지 URL (선택)",
             "required": false,
             "schema": {
               "type": "string",
@@ -30,7 +29,6 @@
           {
             "name": "image_file_b64",
             "in": "query",
-            "description": "Base64 인코딩된 이미지 데이터 (선택)",
             "required": false,
             "schema": {
               "type": "string"
@@ -39,31 +37,38 @@
           {
             "name": "size",
             "in": "query",
-            "description": "해상도 설정",
             "schema": {
               "type": "string",
-              "enum": ["preview", "full", "auto"],
-              "default": "auto"
+              "enum": [
+                "preview",
+                "full",
+                "auto"
+              ]
             }
           },
           {
             "name": "type",
             "in": "query",
-            "description": "전경 객체 타입",
             "schema": {
               "type": "string",
-              "enum": ["auto", "person", "product", "car"],
-              "default": "auto"
+              "enum": [
+                "auto",
+                "person",
+                "product",
+                "car"
+              ]
             }
           },
           {
             "name": "format",
             "in": "query",
-            "description": "출력 이미지 포맷",
             "schema": {
               "type": "string",
-              "enum": ["auto", "png", "jpg"],
-              "default": "auto"
+              "enum": [
+                "auto",
+                "png",
+                "jpg"
+              ]
             }
           }
         ],
@@ -73,31 +78,31 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RemoveBgJsonResponse"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "result_b64": {
+                          "type": "string"
+                        },
+                        "foreground_top": {
+                          "type": "integer"
+                        },
+                        "foreground_left": {
+                          "type": "integer"
+                        },
+                        "foreground_width": {
+                          "type": "integer"
+                        },
+                        "foreground_height": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
                 }
               }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "RemoveBgJsonResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "result_b64": {
-                "type": "string",
-                "description": "Base64 인코딩된 결과 이미지"
-              },
-              "foreground_top": { "type": "integer" },
-              "foreground_left": { "type": "integer" },
-              "foreground_width": { "type": "integer" },
-              "foreground_height": { "type": "integer" }
             }
           }
         }
