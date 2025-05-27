@@ -1,0 +1,839 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "spark",
+    "version": "0.0.1"
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "PresetList": {
+        "type": "object",
+        "properties": {
+          "preset_list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresetCategory"
+            },
+            "description": "프리셋 카테고리 목록"
+          }
+        }
+      },
+      "PresetCategory": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "카테고리 이름"
+          },
+          "priority": {
+            "type": "number",
+            "description": "카테고리 우선순위"
+          },
+          "presets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Preset"
+            },
+            "description": "프리셋 목록"
+          }
+        }
+      },
+      "Preset": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "프리셋 이름"
+          },
+          "priority": {
+            "type": "number",
+            "description": "프리셋 우선순위"
+          },
+          "preset_params": {
+            "$ref": "#/components/schemas/PresetParams"
+          }
+        }
+      },
+      "PresetParams": {
+        "type": "object",
+        "properties": {
+          "labels": {
+            "type": "array",
+            "description": "라벨 목록"
+          },
+          "asset_path": {
+            "type": "string",
+            "description": "배경 이미지 경로"
+          },
+          "prompt": {
+            "type": "object",
+            "description": "프롬프트"
+          },
+          "reference_image_path": {
+            "type": "string",
+            "description": "참조 이미지 경로"
+          }
+        }
+      },
+      "ModelList": {
+        "type": "object",
+        "properties": {
+          "model_list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModelItem"
+            },
+            "description": "모델 목록"
+          }
+        }
+      },
+      "ModelItem": {
+        "type": "object",
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "example": "fal-ai/mochi-v1",
+            "description": "모델 이름"
+          },
+          "model_params": {
+            "$ref": "#/components/schemas/ModelParams"
+          }
+        }
+      },
+      "ModelParams": {
+        "type": "object",
+        "properties": {
+          "creagen_credit": {
+            "type": "number",
+            "description": "크리젠 크레딧 소모량"
+          },
+          "creagen_duration": {
+            "type": "number",
+            "description": "크리젠 표기 예상 소요 시간(초)"
+          },
+          "creagen_order": {
+            "type": "number",
+            "description": "크리젠 정렬 순서"
+          },
+          "logo_url": {
+            "type": "string",
+            "description": "로고 URL"
+          },
+          "durations": {
+            "type": "array",
+            "description": "생성가능한 비디오 길이 목록(초)"
+          },
+          "label": {
+            "type": "array",
+            "description": "라벨 목록"
+          },
+          "model_input": {
+            "type": "array",
+            "description": "모델 입력 파라미터"
+          },
+          "model_output": {
+            "type": "array",
+            "description": "모델 출력 설정"
+          }
+        }
+      },
+      "QueueResponse": {
+        "type": "object",
+        "properties": {
+          "tix_id": {
+            "type": "string"
+          },
+          "model_name": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "result_topic": {
+            "type": "string"
+          }
+        }
+      },
+      "Unauthorized": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The error name",
+            "example": "UNAUTHORIZED",
+            "default": "UNAUTHORIZED"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "description": "An error message"
+          },
+          "status": {
+            "type": "number",
+            "description": "The status code of the exception",
+            "example": 401,
+            "default": 401
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GenericError"
+            },
+            "description": "A list of related errors"
+          },
+          "stack": {
+            "type": "string",
+            "description": "The stack trace (only in development mode)"
+          }
+        },
+        "required": [
+          "name",
+          "message",
+          "status"
+        ]
+      },
+      "GenericError": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The error name"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "description": "An error message"
+          }
+        },
+        "additionalProperties": true,
+        "required": [
+          "name",
+          "message"
+        ]
+      },
+      "Forbidden": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The error name",
+            "example": "FORBIDDEN",
+            "default": "FORBIDDEN"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "description": "An error message"
+          },
+          "status": {
+            "type": "number",
+            "description": "The status code of the exception",
+            "example": 403,
+            "default": 403
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GenericError"
+            },
+            "description": "A list of related errors"
+          },
+          "stack": {
+            "type": "string",
+            "description": "The stack trace (only in development mode)"
+          }
+        },
+        "required": [
+          "name",
+          "message",
+          "status"
+        ]
+      },
+      "QueueRequest": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "$ref": "#/components/schemas/GenInputData"
+          },
+          "meta": {
+            "type": "object",
+            "example": {
+              "request_item_id": 1234
+            },
+            "description": "Optional. If you set this, IoT publish will contain this value."
+          }
+        },
+        "required": [
+          "input"
+        ]
+      },
+      "GenInputData": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "example": "A serene landscape with mountains reflected in a crystal clear lake at sunset"
+          },
+          "image_url": {
+            "type": "string",
+            "example": "https://fal.media/files/panda/K5Rndvzmn1j-OI1VZXDVd.jpeg"
+          },
+          "enhance_prompt": {
+            "type": "boolean",
+            "example": true
+          },
+          "duration": {
+            "type": "number",
+            "example": 5
+          },
+          "image_size": {
+            "type": "object",
+            "example": {
+              "width": 1280,
+              "height": 720
+            }
+          },
+          "seed": {
+            "type": "number",
+            "example": 301
+          },
+          "model_input_data": {
+            "type": "object",
+            "example": {
+              "flux-pro/v1.1": {
+                "sync_mode": false,
+                "num_images": 1,
+                "enable_safety_checker": true,
+                "safety_tolerance": "2",
+                "ouput_format": "jpeg"
+              }
+            }
+          }
+        }
+      },
+      "RequestStatusResponse": {
+        "type": "object",
+        "properties": {
+          "model_name": {
+            "type": "string"
+          },
+          "tix_id": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          }
+        }
+      },
+      "RequestResponse": {
+        "type": "object",
+        "properties": {
+          "model_name": {
+            "type": "string"
+          },
+          "tix_id": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/GenOutputData"
+          }
+        }
+      },
+      "GenOutputData": {
+        "type": "object"
+      },
+      "RequestCancelResponse": {
+        "type": "object",
+        "properties": {
+          "model_name": {
+            "type": "string"
+          },
+          "tix_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/gen/preset": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresetList"
+                }
+              }
+            },
+            "description": "Success"
+          }
+        },
+        "parameters": [],
+        "tags": [
+          "BlackController"
+        ],
+        "operationId": "blackControllerGetPreset"
+      }
+    },
+    "/gen/models": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelList"
+                }
+              }
+            },
+            "description": "Success"
+          }
+        },
+        "parameters": [],
+        "tags": [
+          "BlackController"
+        ],
+        "operationId": "blackControllerGetModels"
+      }
+    },
+    "/gen/{model_name}": {
+      "post": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueueResponse"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forbidden"
+                }
+              }
+            },
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "model_name",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "fal-ai/flux-pro/v1.1"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueueRequest"
+              }
+            }
+          }
+        },
+        "tags": [
+          "GenController"
+        ],
+        "operationId": "genControllerQueue"
+      }
+    },
+    "/gen/{model_name}/requests/{tix_id}/status": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestStatusResponse"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forbidden"
+                }
+              }
+            },
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "model_name",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "fal-ai/flux-pro/v1.1"
+            }
+          },
+          {
+            "in": "path",
+            "name": "tix_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "GenController"
+        ],
+        "operationId": "genControllerStatus"
+      }
+    },
+    "/gen/{model_name}/requests/{tix_id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResponse"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forbidden"
+                }
+              }
+            },
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "model_name",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "fal-ai/flux-pro/v1.1"
+            }
+          },
+          {
+            "in": "path",
+            "name": "tix_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "GenController"
+        ],
+        "operationId": "genControllerResult"
+      }
+    },
+    "/gen/{model_name}/requests/{tix_id}/cancel": {
+      "put": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestCancelResponse"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forbidden"
+                }
+              }
+            },
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "model_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "tix_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "GenController"
+        ],
+        "operationId": "genControllerCancel"
+      }
+    },
+    "/gen/models/signals": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "description": "Spark Gen AI API 에서 사용할 수 있는 모델 들의 상태를 가져옵니다. 상태는 신호등을 차용하여 RED, YELLOW, GREEN 으로 구분합니다.",
+        "parameters": [],
+        "tags": [
+          "SignalController"
+        ],
+        "operationId": "signalControllerGetSignals"
+      },
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "description": "Spark Gen AI API 에서 사용할 수 있는 모델의 상태를 생성 합니다.",
+        "parameters": [],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "model_name": {
+                    "type": "string",
+                    "example": "fal-ai/flux-pro/v1.1"
+                  },
+                  "light": {
+                    "type": "string",
+                    "example": "GREEN"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "tags": [
+          "SignalController"
+        ],
+        "operationId": "signalControllerCreateSignal"
+      }
+    },
+    "/gen/models/{model_name}/signals": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "description": "Spark Gen AI API 에서 사용할 수 있는 특정 모델 하나의 상태를 가져옵니다. 상태는 신호등을 차용하여 RED, YELLOW, GREEN 으로 구분합니다.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "model_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "model_name",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "fal-ai/flux-pro/v1.1"
+            }
+          }
+        ],
+        "tags": [
+          "SignalController"
+        ],
+        "operationId": "signalControllerGetSignal"
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "description": "Spark Gen AI API 에서 사용할 수 있는 모델의 상태를 수정 합니다.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "model_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "model_name",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "fal-ai/flux-pro/v1.1"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "light": {
+                    "type": "string",
+                    "example": "SignalLight.GREEN"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "tags": [
+          "SignalController"
+        ],
+        "operationId": "signalControllerUpdateSignal"
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "description": "Spark Gen AI API 에서 사용할 수 있는 모델의 상태를 삭제 합니다.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "model_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "model_name",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "fal-ai/flux-pro/v1.1"
+            }
+          }
+        ],
+        "tags": [
+          "SignalController"
+        ],
+        "operationId": "signalControllerDeleteSignal"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "BlackController"
+    },
+    {
+      "name": "GenController"
+    },
+    {
+      "name": "SignalController"
+    }
+  ]
+}

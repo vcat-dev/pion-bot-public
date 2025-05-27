@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Image Background Remove API",
+    "title": "removebg",
     "version": "1.0.0",
     "description": "Base64 또는 URL로 이미지를 입력받아 배경을 제거합니다. MCP로 호환됩니다."
   },

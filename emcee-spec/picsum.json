@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Lorem Picsum 이미지 API",
+    "title": "picsum",
     "description": "무작위 또는 특정 ID의 플레이스홀더 이미지를 제공하는 무료 이미지 API입니다. MCP 도구에서 사용할 수 있도록 파라미터는 명확한 타입 및 설명을 포함합니다.",
     "version": "1.0.0"
   },

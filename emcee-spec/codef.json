@@ -1,8 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "CODEF Admin API",
-    "description": "API for retrieving CODEF error code information",
+    "title": "codef",
     "version": "1.0.0",
     "license": {
       "name": "Unknown",
